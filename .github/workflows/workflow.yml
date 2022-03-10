@@ -1,0 +1,35 @@
+---
+name: ES Vietnamese Analyzer
+on:
+  push:
+    branches:
+      - '*'
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      ES_VERSION: 7.9.3
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Java JDK
+        uses: actions/setup-java@v3.0.0
+        with:
+          distribution: temurin
+          java-version: 11
+          cache: maven
+      - name: Replace the ES_VERSION
+        run: sed -i "s/7.4.0/$ES_VERSION/g" pom.xml
+      - name: Build Vietnamese analyzer ES plugin with Maven
+        run: mvn -B package --file pom.xml
+      - name: Rename release files
+        run: |
+          cd target/releases
+          mv elasticsearch-analysis-vietnamese-$ES_VERSION.zip elasticsearch-analysis-vietnamese.zip
+      - name: Release plugin
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/v')
+        with:
+          files: target/releases/elasticsearch-analysis-vietnamese.zip
