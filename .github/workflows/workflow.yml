@@ -27,7 +27,7 @@ jobs:
         run: |
           sudo cmake -DBUILD_JAVA=1 ..
           sudo make install
-        working-directory: /tmp/tokenizer/build
+        working-directory: $TOKENIZER_DIR/build
       - name: Replace the ES_VERSION
         run: sed -i "s/7.17.1/$ES_VERSION/g" pom.xml
       - name: Build Vietnamese analyzer ES plugin with Maven
