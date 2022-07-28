@@ -15,8 +15,8 @@ jobs:
     steps:
       - name: Install required tools
         run: |
-          apt-get update -y
-          apt-get install -y gcc cmake default-jdk-headless maven
+          sudo apt-get update -y
+          sudo apt-get install -y gcc cmake default-jdk-headless maven
       - name: Check
         run: mvn -h
       - name: Clone CocCoc tokenizer
