@@ -13,13 +13,22 @@ jobs:
     env:
       ES_VERSION: 7.17.1
     steps:
-      - uses: actions/checkout@v3
-      - name: Setup Java JDK
-        uses: actions/setup-java@v3.0.0
-        with:
-          distribution: temurin
-          java-version: 11
-          cache: maven
+      - name: Install required tools
+        run: |
+          apt-get update -y
+          apt-get install -y gcc cmake default-jdk-headless maven
+        user: root
+      - name: Check
+        run: mvn -h
+      - name: Clone CocCoc tokenizer
+        run: git clone --depth 1 https://github.com/coccoc/coccoc-tokenizer.git $TOKENIZER_DIR
+      - name: Create build directory for the tokenizer
+        run: mkdir -p $TOKENIZER_DIR/build
+      - name: Compile the tokenizer
+        run: |
+          cmake -DBUILD_JAVA=1 ..
+          make install
+        working-directory: /tmp/tokenizer/build
       - name: Replace the ES_VERSION
         run: sed -i "s/7.17.1/$ES_VERSION/g" pom.xml
       - name: Build Vietnamese analyzer ES plugin with Maven
@@ -28,8 +37,8 @@ jobs:
         run: |
           cd target/releases
           mv elasticsearch-analysis-vietnamese-$ES_VERSION.zip elasticsearch-analysis-vietnamese.zip
-      - name: Release plugin
-        uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/v')
-        with:
-          files: target/releases/elasticsearch-analysis-vietnamese.zip
+      # - name: Release plugin
+      #   uses: softprops/action-gh-release@v1
+      #   if: startsWith(github.ref, 'refs/tags/v')
+      #   with:
+      #     files: target/releases/elasticsearch-analysis-vietnamese.zip
