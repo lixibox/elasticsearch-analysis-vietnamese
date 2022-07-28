@@ -17,7 +17,6 @@ jobs:
         run: |
           apt-get update -y
           apt-get install -y gcc cmake default-jdk-headless maven
-        user: root
       - name: Check
         run: mvn -h
       - name: Clone CocCoc tokenizer
