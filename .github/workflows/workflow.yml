@@ -22,11 +22,11 @@ jobs:
       - name: Clone CocCoc tokenizer
         run: git clone --depth 1 https://github.com/coccoc/coccoc-tokenizer.git $TOKENIZER_DIR
       - name: Create build directory for the tokenizer
-        run: mkdir -p $TOKENIZER_DIR/build
+        run: sudo mkdir -p $TOKENIZER_DIR/build
       - name: Compile the tokenizer
         run: |
-          cmake -DBUILD_JAVA=1 ..
-          make install
+          sudo cmake -DBUILD_JAVA=1 ..
+          sudo make install
         working-directory: /tmp/tokenizer/build
       - name: Replace the ES_VERSION
         run: sed -i "s/7.17.1/$ES_VERSION/g" pom.xml
