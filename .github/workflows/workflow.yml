@@ -11,7 +11,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      ES_VERSION: 7.9.3
+      ES_VERSION: 7.3.1
     steps:
       - uses: actions/checkout@v3
       - name: Setup Java JDK
@@ -21,7 +21,7 @@ jobs:
           java-version: 11
           cache: maven
       - name: Replace the ES_VERSION
-        run: sed -i "s/7.4.0/$ES_VERSION/g" pom.xml
+        run: sed -i "s/7.17.1/$ES_VERSION/g" pom.xml
       - name: Build Vietnamese analyzer ES plugin with Maven
         run: mvn -B package --file pom.xml
       - name: Rename release files
